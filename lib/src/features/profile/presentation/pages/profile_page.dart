@@ -11,7 +11,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authenticationProvider);
-    
+
     ref.listen(
       authenticationProvider,
       (previous, next) {
@@ -26,6 +26,7 @@ class ProfilePage extends ConsumerWidget {
         appBar: AppBar(
           title: const Text('Profile Page'),
           centerTitle: true,
+          leading: const SizedBox.shrink(),
         ),
         body: ListView(
           padding: const EdgeInsets.all(16),

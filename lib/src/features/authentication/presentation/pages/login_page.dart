@@ -25,7 +25,7 @@ class LoginPage extends HookConsumerWidget {
       (previous, next) {
         if (next is AsyncData && next.value != null) {
           context.showSuccessSnackbar(next.value!);
-          context.pushNamed(RouteName.otp);
+
         } else if (next is AsyncError) {
           context.showErrorSnackbar(next.error.toString());
         }

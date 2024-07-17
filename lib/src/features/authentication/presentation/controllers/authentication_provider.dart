@@ -32,6 +32,7 @@ class Authentication extends _$Authentication {
       },
       (data) {
         state = AsyncData(data);
+        ref.read(routerProvider).pushNamed(RouteName.otp);
       },
     );
   }
