@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:sabani_tech_test/src/features/authentication/data/datasources/remote/authentication_remote_datasource.dart';
+import 'package:sabani_tech_test/src/features/authentication/domain/models/user_model.dart';
 import 'package:sabani_tech_test/src/features/authentication/domain/repositories/authentication_repository.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -42,6 +43,24 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<Either<String, String>> logout() async{
     final result = await remoteDatasource.logout();
+    return result.fold(
+      (error) => left(error),
+      (data) => right(data),
+    );
+  }
+
+  @override
+  Future<Either<String, UserModel>> getUser() async{
+    final result = await remoteDatasource.getUser();
+    return result.fold(
+      (error) => left(error),
+      (data) => right(data),
+    );
+  }
+  
+  @override
+  Future<Either<String, String>> verificationAgain({required String email}) async{
+    final result = await remoteDatasource.verificationAgain(email: email);
     return result.fold(
       (error) => left(error),
       (data) => right(data),

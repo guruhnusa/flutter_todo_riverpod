@@ -1,25 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'task_provider.dart';
+part of 'save_user_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$taskHash() => r'a08ed184cd0dfd3b58f3424541a10fde4a5602c6';
+String _$saveUserHash() => r'b657cf0e41b4dcdb07efcbd591db7dbe665980d0';
 
-/// See also [Task].
-@ProviderFor(Task)
-final taskProvider =
-    AutoDisposeAsyncNotifierProvider<Task, List<TaskModel>>.internal(
-  Task.new,
-  name: r'taskProvider',
+/// See also [saveUser].
+@ProviderFor(saveUser)
+final saveUserProvider = AutoDisposeFutureProvider<void>.internal(
+  saveUser,
+  name: r'saveUserProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$taskHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$saveUserHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Task = AutoDisposeAsyncNotifier<List<TaskModel>>;
+typedef SaveUserRef = AutoDisposeFutureProviderRef<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

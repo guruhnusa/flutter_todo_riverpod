@@ -5,11 +5,16 @@ import 'package:sabani_tech_test/src/features/authentication/domain/usecase/logi
 import 'package:sabani_tech_test/src/features/authentication/domain/usecase/logout.dart';
 import 'package:sabani_tech_test/src/features/authentication/domain/usecase/register.dart';
 import 'package:sabani_tech_test/src/features/authentication/domain/usecase/verification.dart';
+import 'package:sabani_tech_test/src/features/authentication/domain/usecase/verification_again.dart';
+import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/email_provider.dart';
+import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/save_user_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/token_manager_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/usecase/login_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/usecase/logout_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/usecase/register_provider.dart';
+import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/usecase/verification_again.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/usecase/verification_provider.dart';
+import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/user_manager_provider.dart';
 import 'package:sabani_tech_test/src/features/main/presentation/controllers/selected_index_provider.dart';
 
 part 'authentication_provider.g.dart';
@@ -41,8 +46,6 @@ class Authentication extends _$Authentication {
       {required String name,
       required String email,
       required String password}) async {
-    ref.invalidateSelf();
-
     state = const AsyncLoading();
     Register register = ref.read(registerProvider);
     final result = await register(
@@ -54,12 +57,12 @@ class Authentication extends _$Authentication {
       },
       (data) {
         state = AsyncData(data);
+        ref.read(routerProvider).pop();
       },
     );
   }
 
   Future<void> verification({required String otp}) async {
-    state = const AsyncLoading();
     Verification verif = ref.read(verificationProvider);
     final result = await verif.call(otp);
     return result.fold(
@@ -71,8 +74,25 @@ class Authentication extends _$Authentication {
         TokenManager tokenManager =
             await ref.watch(tokenManagerProvider.future);
         await tokenManager.saveToken(data);
+        await ref.watch(saveUserProvider.future);
         state = const AsyncData('Verification Success');
+        ref.invalidate(emailProvider);
         ref.read(routerProvider).pushReplacementNamed(RouteName.main);
+      },
+    );
+  }
+
+  Future<void> verificationAgain({required String email}) async {
+    state = const AsyncLoading();
+    VerificationAgain verif = ref.read(verificationAgainProvider);
+    final result = await verif.call(email);
+    return result.fold(
+      (error) {
+        state = AsyncError(error, StackTrace.current);
+        state = const AsyncData(null);
+      },
+      (data) {
+        state = AsyncData(data);
       },
     );
   }
@@ -91,6 +111,7 @@ class Authentication extends _$Authentication {
             await ref.watch(tokenManagerProvider.future);
         await tokenManager.removeToken();
         ref.invalidate(selectedIndexNavBarProvider);
+        ref.invalidate(getCurrentUserProvider);
         state = const AsyncData('Logout Success');
         ref.read(routerProvider).pushReplacementNamed(RouteName.login);
       },

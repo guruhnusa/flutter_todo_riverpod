@@ -8,11 +8,12 @@ import 'package:sabani_tech_test/src/core/helper/buttons.dart';
 import 'package:sabani_tech_test/src/core/helper/custom_text_field.dart';
 import 'package:sabani_tech_test/src/core/routers/router_name.dart';
 import 'package:sabani_tech_test/src/core/utils/constant/colors.dart';
-import 'package:sabani_tech_test/src/features/home/domain/models/status_task_model.dart';
+import 'package:sabani_tech_test/src/features/home/data/datasources/local/task_filter.dart';
 import 'package:sabani_tech_test/src/features/home/presentation/controllers/task_provider.dart';
 import 'package:sabani_tech_test/src/features/home/presentation/widgets/card_task_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../widgets/header_profile_widget.dart';
 import '../widgets/shimmer_card_widget.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -20,21 +21,6 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<StatusTaskModel> filters = [
-      StatusTaskModel(
-        title: 'All',
-        value: 'all',
-      ),
-      StatusTaskModel(
-        title: 'To Do',
-        value: 'to_do',
-      ),
-      StatusTaskModel(
-        title: 'Completed',
-        value: 'completed',
-      ),
-    ];
-
     final selectedIndexStatus = useState<int>(0);
     final selectedValueStatus = useState<String?>('all');
 
@@ -54,13 +40,13 @@ class HomePage extends HookConsumerWidget {
       String status = 'all';
       switch (index) {
         case 0:
-          status = filters[index].value;
+          status = taskFilter[index].value;
           break;
         case 1:
-          status = filters[index].value;
+          status = taskFilter[index].value;
           break;
         case 2:
-          status = filters[index].value;
+          status = taskFilter[index].value;
           break;
       }
       ref.read(taskProvider.notifier).filterStatusTask(status: status);
@@ -85,94 +71,19 @@ class HomePage extends HookConsumerWidget {
         child: Column(
           children: [
             const Gap(20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Container(
-                    height: 40,
-                    width: 40,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primaryCream,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Gap(12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Gap(4),
-                      Text(
-                        'Hello,',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const Text(
-                        'John Doe',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      context.pushNamed(RouteName.deleteTask);
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryRed,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.restore_from_trash,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const Gap(8),
-                  GestureDetector(
-                    onTap: () {
-                      context.pushNamed(RouteName.archiveTask);
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryPurple,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.archive,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const HeaderProfile(),
             const Gap(20),
             Container(
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: filters.length,
+                itemCount: taskFilter.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
                       selectedIndexStatus.value = index;
-                      selectedValueStatus.value = filters[index].value;
+                      selectedValueStatus.value = taskFilter[index].value;
                       onCategoryTap(index);
                       searchController.clear();
                     },
@@ -190,7 +101,7 @@ class HomePage extends HookConsumerWidget {
                       ),
                       child: Center(
                         child: Text(
-                          filters[index].title,
+                          taskFilter[index].title,
                           style: TextStyle(
                             fontSize: 16,
                             color: selectedIndexStatus.value == index

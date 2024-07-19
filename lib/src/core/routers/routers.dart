@@ -5,6 +5,7 @@ import 'package:sabani_tech_test/src/features/authentication/presentation/contro
 import 'package:sabani_tech_test/src/features/authentication/presentation/pages/login_page.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/pages/otp_page.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/pages/register_page.dart';
+import 'package:sabani_tech_test/src/features/authentication/presentation/pages/verifiy_email_page.dart';
 import 'package:sabani_tech_test/src/features/home/domain/models/task_model.dart';
 import 'package:sabani_tech_test/src/features/home/presentation/pages/add_task_page.dart';
 import 'package:sabani_tech_test/src/features/home/presentation/pages/archive_task_page.dart';
@@ -43,6 +44,11 @@ Raw<GoRouter> router(RouterRef ref) {
         name: RouteName.otp,
         path: '/otp',
         builder: (context, state) => const OtpPage(),
+      ),
+      GoRoute(
+        name: RouteName.verificationEmail,
+        path: '/verificationEmail',
+        builder: (context, state) => const VerifiyEmailPage(),
       ),
       GoRoute(
         name: RouteName.main,

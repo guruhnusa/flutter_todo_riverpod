@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +10,7 @@ import 'package:pinput/pinput.dart';
 import 'package:sabani_tech_test/src/core/assets/assets.gen.dart';
 import 'package:sabani_tech_test/src/core/routers/router_name.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/authentication_provider.dart';
+import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/email_provider.dart';
 
 class OtpPage extends HookConsumerWidget {
   const OtpPage({super.key});
@@ -15,7 +19,19 @@ class OtpPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authenticationProvider);
 
+    final time = useState(30);
+    final emailState = ref.watch(emailProvider);
 
+    useEffect(() {
+      final timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (time.value == 0) {
+          timer.cancel();
+        } else {
+          time.value = time.value - 1;
+        }
+      });
+      return timer.cancel;
+    }, [time]);
     return Scaffold(
       appBar: AppBar(
           surfaceTintColor: Colors.transparent,
@@ -59,7 +75,43 @@ class OtpPage extends HookConsumerWidget {
                         .verification(otp: pin);
                   },
                 ),
-          const Gap(20),
+          const Gap(14),
+          Center(
+            child: time.value == 0
+                ? TextButton(
+                    onPressed: () {
+                      time.value = 30;
+                    },
+                    child: const Text(
+                      'Resend OTP',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Resend OTP in ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Text(
+                        '${time.value} seconds',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
         ],
       ),
     );

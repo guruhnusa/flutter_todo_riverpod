@@ -103,6 +103,9 @@ class Task extends _$Task {
       },
       (success) async {
         onSuccess!(message: success);
+        ref.read(routerProvider).pop();
+        getTasks();
+        await future;
       },
     );
   }

@@ -15,6 +15,7 @@ class RegisterPage extends HookConsumerWidget {
     final TextEditingController emailController = useTextEditingController();
     final TextEditingController passwordController = useTextEditingController();
 
+    final authState = ref.watch(authenticationProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -46,6 +47,7 @@ class RegisterPage extends HookConsumerWidget {
               ),
               const Gap(20.0),
               Button.filled(
+                disabled: authState.isLoading,
                 onPressed: () {
                   ref.read(authenticationProvider.notifier).register(
                         name: nameController.text,
@@ -53,7 +55,7 @@ class RegisterPage extends HookConsumerWidget {
                         password: passwordController.text,
                       );
                 },
-                label: 'Register',
+                label: authState.isLoading ? 'Loading...' : 'Register',
               ),
               const Gap(20.0),
             ],

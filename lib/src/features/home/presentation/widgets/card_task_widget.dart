@@ -21,7 +21,7 @@ class CardTask extends ConsumerWidget {
     required this.task,
     this.isRestore = false,
     this.isDelete = false,
-    this.isTap = true,
+    this.isTap = false,
   });
 
   @override

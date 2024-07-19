@@ -44,7 +44,10 @@ class EditTaskPage extends HookConsumerWidget {
     final isButtonDisabled = useState<bool>(true);
     final taskState = ref.watch(taskProvider);
 
-    final statusTask = useState<bool>(false);
+    final statusTask = useState<bool>(
+      task.statusTask == 'completed' ? true : false,
+    );
+
     void updateButtonState() {
       isButtonDisabled.value =
           titleController.text.isEmpty || descriptionController.text.isEmpty;
@@ -142,6 +145,21 @@ class EditTaskPage extends HookConsumerWidget {
             ),
             onChanged: (bool? value) {
               statusTask.value = value!;
+              TaskParams params = TaskParams(
+                id: task.id,
+                title: titleController.text,
+                description: descriptionController.text,
+                dueDate: dateinput.value!,
+                priority: selectedPriority.value!,
+                status: statusTask.value ? 'Completed' : 'to_do',
+              );
+              ref.read(taskProvider.notifier).updateTask(
+                    params: params,
+                    onSuccess: ({required message}) =>
+                        context.showSuccessSnackbar(message),
+                    onError: ({required message}) =>
+                        context.showErrorSnackbar(message),
+                  );
             },
           ),
           const Gap(8),

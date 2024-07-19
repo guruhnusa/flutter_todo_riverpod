@@ -25,7 +25,6 @@ class LoginPage extends HookConsumerWidget {
       (previous, next) {
         if (next is AsyncData && next.value != null) {
           context.showSuccessSnackbar(next.value!);
-
         } else if (next is AsyncError) {
           context.showErrorSnackbar(next.error.toString());
         }
@@ -100,7 +99,26 @@ class LoginPage extends HookConsumerWidget {
                     ),
                   )
                 ],
-              )
+              ),
+              const Gap(12.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Your Email is Not Verified? '),
+                  GestureDetector(
+                    onTap: () {
+                      context.pushNamed(RouteName.verificationEmail);
+                    },
+                    child: const Text(
+                      'Verify Now',
+                      style: TextStyle(
+                        color: AppColors.primaryBlue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),

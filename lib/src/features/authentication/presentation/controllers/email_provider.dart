@@ -1,0 +1,5 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final emailProvider = StateProvider<String>((ref) {
+  return '';
+});
