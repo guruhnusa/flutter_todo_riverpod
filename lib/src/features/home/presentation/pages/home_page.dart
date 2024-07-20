@@ -9,6 +9,7 @@ import 'package:sabani_tech_test/src/core/helper/custom_text_field.dart';
 import 'package:sabani_tech_test/src/core/routers/router_name.dart';
 import 'package:sabani_tech_test/src/core/utils/constant/colors.dart';
 import 'package:sabani_tech_test/src/features/home/data/datasources/local/task_filter.dart';
+import 'package:sabani_tech_test/src/features/home/domain/models/sort_task_model.dart';
 import 'package:sabani_tech_test/src/features/home/presentation/controllers/task_provider.dart';
 import 'package:sabani_tech_test/src/features/home/presentation/widgets/card_task_widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -51,6 +52,31 @@ class HomePage extends HookConsumerWidget {
       }
       ref.read(taskProvider.notifier).filterStatusTask(status: status);
     }
+
+    List<SortTaskModel> sortTask = [
+      SortTaskModel(
+        title: 'Ascending',
+        value: 'asc',
+      ),
+      SortTaskModel(
+        title: 'Descending',
+        value: 'dsc',
+      ),
+      SortTaskModel(
+        title: 'Priority Low',
+        value: 'low',
+      ),
+      SortTaskModel(
+        title: 'Priority Urgent',
+        value: 'urgently',
+      ),
+      SortTaskModel(
+        title: 'Due Date',
+        value: 'due_date',
+      ),
+    ];
+
+    final selectedSort = useState<String?>(null);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -133,8 +159,28 @@ class HomePage extends HookConsumerWidget {
                           },
                         ),
                       ),
-                      const Gap(8),
-                      const Icon(Icons.search),
+                      PopupMenuButton(
+                        icon: const Icon(Icons.sort),
+                        onSelected: (value) {
+                          selectedSort.value = value;
+                          ref
+                              .read(taskProvider.notifier)
+                              .sortTask(value: selectedSort.value!);
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        itemBuilder: (context) {
+                          return sortTask
+                              .map(
+                                (e) => PopupMenuItem(
+                                  value: e.value,
+                                  child: Text(e.title),
+                                ),
+                              )
+                              .toList();
+                        },
+                      ),
                     ],
                   );
                 },

@@ -6,7 +6,6 @@ import 'package:sabani_tech_test/src/features/authentication/domain/usecase/logo
 import 'package:sabani_tech_test/src/features/authentication/domain/usecase/register.dart';
 import 'package:sabani_tech_test/src/features/authentication/domain/usecase/verification.dart';
 import 'package:sabani_tech_test/src/features/authentication/domain/usecase/verification_again.dart';
-import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/email_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/save_user_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/token_manager_provider.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/usecase/login_provider.dart';
@@ -63,6 +62,7 @@ class Authentication extends _$Authentication {
   }
 
   Future<void> verification({required String otp}) async {
+    state = const AsyncLoading();
     Verification verif = ref.read(verificationProvider);
     final result = await verif.call(otp);
     return result.fold(
@@ -76,7 +76,6 @@ class Authentication extends _$Authentication {
         await tokenManager.saveToken(data);
         await ref.watch(saveUserProvider.future);
         state = const AsyncData('Verification Success');
-        ref.invalidate(emailProvider);
         ref.read(routerProvider).pushReplacementNamed(RouteName.main);
       },
     );

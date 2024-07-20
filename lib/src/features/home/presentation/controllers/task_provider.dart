@@ -66,6 +66,47 @@ class Task extends _$Task {
     state = AsyncData(filteredTask);
   }
 
+  Future sortTask({required String value}) async {
+    state = const AsyncLoading();
+
+    switch (value) {
+      case 'asc':
+        searchTaskList.sort((a, b) => a.id!.compareTo(b.id!));
+        break;
+      case 'dsc':
+        searchTaskList.sort((a, b) => b.id!.compareTo(a.id!));
+        break;
+      case 'low':
+        searchTaskList.sort((a, b) {
+          final priorityOrder = {
+            'low': 1,
+            'normal': 2,
+            'high': 3,
+            'urgently': 4,
+          };
+          return priorityOrder[a.taskPriority]!
+              .compareTo(priorityOrder[b.taskPriority]!);
+        });
+        break;
+      case 'urgently':
+        searchTaskList.sort((a, b) {
+          final priorityOrder = {
+            'low': 4,
+            'normal': 3,
+            'high': 2,
+            'urgently': 1,
+          };
+          return priorityOrder[a.taskPriority]!
+              .compareTo(priorityOrder[b.taskPriority]!);
+        });
+        break;
+      case 'due_date':
+        searchTaskList.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+        break;
+    }
+    state = AsyncData(searchTaskList);
+  }
+
   Future createTask({
     required TaskParams params,
     void Function({required String message})? onSuccess,

@@ -10,7 +10,6 @@ import 'package:pinput/pinput.dart';
 import 'package:sabani_tech_test/src/core/assets/assets.gen.dart';
 import 'package:sabani_tech_test/src/core/routers/router_name.dart';
 import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/authentication_provider.dart';
-import 'package:sabani_tech_test/src/features/authentication/presentation/controllers/email_provider.dart';
 
 class OtpPage extends HookConsumerWidget {
   const OtpPage({super.key});
@@ -20,7 +19,6 @@ class OtpPage extends HookConsumerWidget {
     final authState = ref.watch(authenticationProvider);
 
     final time = useState(30);
-    final emailState = ref.watch(emailProvider);
 
     useEffect(() {
       final timer = Timer.periodic(const Duration(seconds: 1), (timer) {
